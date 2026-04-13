@@ -1,36 +1,32 @@
---append all other parts of the config, the required name is the name of the folder in the lua folder as the working director
---that folder should also have an init.lua file in it, its a way of organizing your config
---this top most init.lua will have require statemnts and lazy plugin declarations only
---find out why I need to have utils before adding all the other modules?
---vim.fn.stdpath how to print where the data folder is
-
-local fn = vim.fn
---Map leader to space
+-- Set up configurations
 vim.g.mapleader = " "
-local execute = vim.api.nvim_command
-require("color")  
---
+
+-- Function to clone lazy.nvim if not present
+local function setup_lazy_nvim()
+    local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+    if not vim.loop.fs_stat(lazypath) then
+        vim.fn.system({
+            "git",
+            "clone",
+            "--filter=blob:none",
+            "https://github.com/folke/lazy.nvim.git",
+            "--branch=stable", -- latest stable release
+            lazypath,
+        })
+    end
+    vim.opt.rtp:prepend(lazypath)
+end
+
+setup_lazy_nvim()
+
+require("color")
 require("settings")
 require("keybindings")
 
 local lualine = require("plugins.lualine")
 local telescope = require("plugins.telescope")
-
 local lspconfig = require("lsp.lsp")
 local mason = require("lsp.mason")
-
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
-        lazypath,
-    })
-end
-vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     {
@@ -42,10 +38,10 @@ require("lazy").setup({
             { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
             { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
             { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Telescope buffers" },
-            { "<leader>gf", "<cmd>Telescope lsp_definitions<cr>", desc = "Goto the definition of the word under the cursor, if there's only one, otherwise show all options in Telescope" },
+            { "<leader>gf", "<cmd>Telescope lsp_definitions<cr>", desc = "Goto definition" },
         },
     },
-    {'nvim-telescope/telescope-symbols.nvim'},
+    {"nvim-telescope/telescope-symbols.nvim"},
     {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
@@ -64,15 +60,13 @@ require("lazy").setup({
             opts.sources = opts.sources or {}
             table.insert(opts.sources, {
                 name = "lazydev",
-                group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+                group_index = 0, -- skip LuaLS completions
             })
         end,
         dependencies = { 'hrsh7th/cmp-nvim-lsp',
         {
             "L3MON4D3/LuaSnip",
-            -- follow latest release.
-            version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
-            -- install jsregexp (optional!).
+            version = "v2.*", -- Latest release
             build = "make install_jsregexp",
             config = function() require("luasnip.loaders.from_vscode").lazy_load() end
         },
@@ -84,9 +78,7 @@ require("lazy").setup({
         "SirVer/ultisnips",
         "hrsh7th/cmp-vsnip",
         'hrsh7th/vim-vsnip',
-
     },
-
     config = function()
         require("lsp.cmp")
     end
@@ -94,7 +86,7 @@ require("lazy").setup({
 {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
-    opts = {} -- this is equalent to setup({}) function
+    opts = {} 
 },
 { 'saadparwaiz1/cmp_luasnip' },
 { "lukas-reineke/indent-blankline.nvim" },
@@ -105,152 +97,28 @@ require("lazy").setup({
 {
     'brenoprata10/nvim-highlight-colors',
     config = function()
-        require("nvim-highlight-colors").setup {
-            ---Render style
-            ---@usage 'background'|'foreground'|'virtual'
+        require("nvim-highlight-colors").setup({
             render = 'background',
-
-            ---Set virtual symbol (requires render to be set to 'virtual')
             virtual_symbol = '■',
-
-            ---Set virtual symbol suffix (defaults to '')
             virtual_symbol_prefix = '',
-
-            ---Set virtual symbol suffix (defaults to ' ')
             virtual_symbol_suffix = ' ',
-
-            ---Set virtual symbol position()
-            ---@usage 'inline'|'eol'|'eow'
-            ---inline mimics VS Code style
-            ---eol stands for `end of column` - Recommended to set `virtual_symbol_suffix = ''` when used.
-            ---eow stands for `end of word` - Recommended to set `virtual_symbol_prefix = ' ' and virtual_symbol_suffix = ''` when used.
             virtual_symbol_position = 'inline',
-
-            ---Highlight hex colors, e.g. '#FFFFFF'
             enable_hex = true,
-
-                ---Highlight short hex colors e.g. '#fff'
             enable_short_hex = true,
-
-            ---Highlight rgb colors, e.g. 'rgb(0 0 0)'
             enable_rgb = true,
-
-            ---Highlight hsl colors, e.g. 'hsl(150deg 30% 40%)'
             enable_hsl = true,
-            
-            ---Highlight ansi colors, e.g '\033[0;34m'
             enable_ansi = true,
-
-            ---Highlight xterm 256 (8bit) colors, e.g '\033[38;5;118m'
             enable_xterm256 = true,
-
-            ---Highlight xterm True Color (24bit) colors, e.g '\033[38;2;118;64;90m'
             enable_xtermTrueColor = true,
-
-            -- Highlight hsl colors without function, e.g. '--foreground: 0 69% 69%;'
             enable_hsl_without_function = true,
-
-            ---Highlight CSS variables, e.g. 'var(--testing-color)'
             enable_var_usage = true,
-
-            ---Highlight named colors, e.g. 'green'
             enable_named_colors = true,
-
-            ---Highlight tailwind colors, e.g. 'bg-blue-500'
             enable_tailwind = false,
-
-            ---Set custom colors
-            ---Label must be properly escaped with '%' to adhere to `string.gmatch`
-            --- :help string.gmatch
             custom_colors = {
                 { label = '%-%-theme%-primary%-color', color = '#0f1219' },
-                { label = '%-%-theme%-secondary%-color', color = '#5a5d64' },
-            },
-
-            -- Exclude filetypes or buftypes from highlighting e.g. 'exclude_buftypes = {'text'}'
-                exclude_filetypes = {},
-                exclude_buftypes = {},
-            -- Exclude buffer from highlighting e.g. 'exclude_buffer = function(bufnr) return vim.fn.getfsize(vim.api.nvim_buf_get_name(bufnr)) > 1000000 end'
-                exclude_buffer = function(bufnr) end
-            }
-    end,
-},
-{
-    "nvim-treesitter/nvim-treesitter",
-    dependencies = {
-        "windwp/nvim-ts-autotag",
-        'nvim-treesitter/nvim-treesitter-textobjects',
-    },
-    build = ":TSUpdate",
-    config = function()
-        require("plugins.treesitter")
-    end
-},
-
-{
-    "windwp/nvim-ts-autotag",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    lazy = true,
-    event = "VeryLazy",
-    config = function()
-        require('nvim-ts-autotag').setup({
-            filetypes = {
-                'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx', 'rescript',
-                'xml',
-                'php',
-                'markdown',
-                'astro', 'glimmer', 'handlebars', 'hbs'
+                { label = '%-%-theme%-secondary%-color', color = '#1f2937' },
             }
         })
-    end
-},
-{
-    "onsails/lspkind.nvim",
-    config = function()
-        require("lsp.kind")
-    end
-},
-{
-    "lewis6991/gitsigns.nvim",
-    config =
-    function()
-        require('gitsigns').setup {
-            signs = {
-                add = { text = '+' },
-                change = { text = '~' },
-                delete = { text = '_' },
-                topdelete = { text = '‾' },
-                changedelete = { text = '~' },
-            },
-            signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
-            numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
-            linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
-            word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
-            watch_gitdir = {
-                follow_files = true
-            },
-            attach_to_untracked = true,
-            current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
-            current_line_blame_opts = {
-                virt_text = true,
-                virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-                delay = 1000,
-                ignore_whitespace = false,
-            },
-            current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
-            sign_priority = 6,
-            update_debounce = 100,
-            status_formatter = nil, -- Use default
-            max_file_length = 40000, -- Disable if file is longer than this (in lines)
-            preview_config = {
-                -- Options passed to nvim_open_win
-                border = 'single',
-                style = 'minimal',
-                relative = 'cursor',
-                row = 0,
-                col = 1
-            },
-        }
     end
 },
 {
@@ -261,14 +129,11 @@ require("lazy").setup({
         })
     end
 },
-{ -- LSP Configuration & Plugins
-    'neovim/nvim-lspconfig',
+{
+    "neovim/nvim-lspconfig",
     dependencies = {
-        -- Automatically install LSPs to stdpath for neovim
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
-
-        -- Useful status updates for LSP
         'j-hui/fidget.nvim',
     }
 },
@@ -282,13 +147,10 @@ require("lazy").setup({
 },
 {
     'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim', 'echasnovski/mini.icons', 'nvim-tree/nvim-web-devicons'}, -- if you use the mini.nvim suite
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim', 'echasnovski/mini.icons', 'nvim-tree/nvim-web-devicons'},
     opts = {},
     config = function()
         require('render-markdown').setup({
-            --anti_conceal = { enabled = false },
             render_modes = { 'n', 'c', 't' },
             heading = { position = 'inline'},
         })
@@ -299,68 +161,35 @@ require("lazy").setup({
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = {},
     config = function()
-        require("typescript-tools").setup {
-            --on_attach = function() ... end,
-            handlers = {},
-            settings = {
-                -- spawn additional tsserver instance to calculate diagnostics on it
-                separate_diagnostic_server = true,
-                -- "change"|"insert_leave" determine when the client asks the server about diagnostic
-                publish_diagnostic_on = "insert_leave",
-                -- array of strings("fix_all"|"add_missing_imports"|"remove_unused"|
-                -- "remove_unused_imports"|"organize_imports") -- or string "all"
-                -- to include all supported code actions
-                -- specify commands exposed as code_actions
-                expose_as_code_action = {},
-                -- string|nil - specify a custom path to `tsserver.js` file, if this is nil or file under path
-                -- not exists then standard path resolution strategy is applied
-                tsserver_path = nil,
-                -- specify a list of plugins to load by tsserver, e.g., for support `styled-components`
-                -- (see 💅 `styled-components` support section)
-                tsserver_plugins = {},
-                -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
-                -- memory limit in megabytes or "auto"(basically no limit)
-                tsserver_max_memory = "auto",
-                -- described below
-                tsserver_format_options = {},
-                tsserver_file_preferences = {},
-                -- locale of all tsserver messages, supported locales you can find here:
-                -- https://github.com/microsoft/TypeScript/blob/3c221fc086be52b19801f6e8d82596d04607ede6/src/compiler/utilitiesPublic.ts#L620
-                tsserver_locale = "en",
-                -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
-                complete_function_calls = false,
-                include_completions_with_insert_text = true,
-                -- CodeLens
-                -- WARNING: Experimental feature also in VSCode, because it might hit performance of server.
-                -- possible values: ("off"|"all"|"implementations_only"|"references_only")
-                code_lens = "off",
-                -- by default code lenses are displayed on all referencable values and for some of you it can
-                -- be too much this option reduce count of them by removing member references from lenses
-                disable_member_code_lens = true,
-                -- JSXCloseTag
-                -- WARNING: it is disabled by default (maybe you configuration or distro already uses nvim-ts-autotag,
-                -- that maybe have a conflict if enable this feature. )
-                jsx_close_tag = {
-                    enable = false,
-                    filetypes = { "javascriptreact", "typescriptreact" },
-                }
-            },
-        }
-
+        require("typescript-tools").setup({
+            separate_diagnostic_server = true,
+            publish_diagnostic_on = "insert_leave",
+            expose_as_code_action = {},
+            tsserver_path = nil,
+            tsserver_plugins = {},
+            tsserver_max_memory = "auto",
+            tsserver_format_options = {},
+            tsserver_file_preferences = {},
+            tsserver_locale = "en",
+            complete_function_calls = false,
+            include_completions_with_insert_text = true,
+            code_lens = "off",
+            disable_member_code_lens = true,
+            jsx_close_tag = {
+                enable = false,
+                filetypes = { "javascriptreact", "typescriptreact" },
+            }
+        })
     end
 },
 {
     "folke/lazydev.nvim",
-    ft = "lua", -- only load on lua files
+    ft = "lua",
     opts = {
         library = {
-            -- See the configuration section for more details
-            -- Load luvit types when the `vim.uv` word is found
             { path = "${3rd}/luv/library", words = { "vim%.uv" } },
             {"nvim-dap-ui"}
         },
-    },
-},
+    }
+}
 })
-
--- notes to add, shift over on comments when using v block for some reason it never works

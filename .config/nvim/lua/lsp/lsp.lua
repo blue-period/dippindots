@@ -24,48 +24,35 @@ return {
       ensure_installed = servers,
     })
 
-    -- Shared defaults for every LSP config
-    vim.lsp.config("*", {
-      capabilities = capabilities,
-    })
+    -- Shared LSP configuration
+    for _, server in ipairs(servers) do
+      vim.lsp.config(server, {
+        capabilities = capabilities,
+      })
+    end
 
-    -- EFM
-    local prettier = require("efmls-configs.formatters.prettier_d")
-    local black = require("efmls-configs.formatters.black")
-
-    local languages = {
-      css = { prettier },
-      scss = { prettier },
-      sass = { prettier },
-      less = { prettier },
-      html = { prettier },
-      javascript = { prettier },
-      typescript = { prettier },
-      json = { prettier },
-      markdown = { prettier },
-      python = { black },
-      yaml = { prettier },
-    }
-
+    -- EFM for formatting
+    local prettiers = { "css", "scss", "sass", "less", "html", "javascript", "typescript", "json", "markdown", "yaml" }
     vim.lsp.config("efm", {
-      filetypes = vim.tbl_keys(languages),
+      filetypes = { unpack(prettiers), "python" },
       init_options = {
         documentFormatting = true,
         documentRangeFormatting = true,
       },
       settings = {
         rootMarkers = { ".git/" },
-        languages = languages,
+        languages = (function()
+          local languages = {}
+          for _, filetype in ipairs(prettiers) do
+            languages[filetype] = { require("efmls-configs.formatters.prettier_d") }
+          end
+          languages["python"] = { require("efmls-configs.formatters.black") }
+          return languages
+        end)(),
       },
     })
 
-    -- Elixir
-    vim.lsp.config("elixirls", {
-      -- Add cmd here if elixir-ls is not on PATH.
-      -- cmd = { "/path/to/elixir-ls/language_server.sh" },
-    })
-
-    -- Lua
+    -- Lua-language configurations
     vim.lsp.config("lua_ls", {
       settings = {
         Lua = {
@@ -93,17 +80,10 @@ return {
       },
     })
 
-    -- Python
-    vim.lsp.config("pyright", {})
-
-    -- Rust
-    vim.lsp.config("rust_analyzer", {})
-
-    -- Enable servers
-    vim.lsp.enable("pyright")
-    vim.lsp.enable("rust_analyzer")
-    vim.lsp.enable("lua_ls")
+    -- Enable LSP servers
+    for _, server in ipairs(servers) do
+      vim.lsp.enable(server)
+    end
     vim.lsp.enable("efm")
-    vim.lsp.enable("elixirls")
   end,
 }

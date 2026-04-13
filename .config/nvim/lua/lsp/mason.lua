@@ -1,6 +1,4 @@
--- cmdline tools and lsp servers
 return {
-
     "williamboman/mason.nvim",
     opts = {
         ensure_installed = {
@@ -17,7 +15,6 @@ return {
         },
         log_level = vim.log.levels.DEBUG
     },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
     config = function(_, opts)
         require("mason").setup(opts)
         local mr = require("mason-registry")

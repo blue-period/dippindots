@@ -1,4 +1,4 @@
-local options = {
+return {
   auto_install = true,
   ensure_installed = {
     "lua",
@@ -7,9 +7,7 @@ local options = {
     "toml",
     "css",
     "tsx",
-    "css",
-    "html",
-    "lua"
+    "html"
   },
   highlight = {
     enable = true,
@@ -18,11 +16,10 @@ local options = {
   autotag = {
     enable = true,
     filetypes = {
-      'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx', 'rescript',
+      'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact',
+      'svelte', 'vue', 'tsx', 'jsx', 'rescript',
       'css', 'lua', 'xml', 'php', 'markdown'
     },
   },
   indent = { enable = true },
 }
-
-require('nvim-ts-autotag').setup()
