@@ -1,5 +1,6 @@
 local servers = {
   "basedpyright",
+  "djls",
   "rust_analyzer",
   "lua_ls",
 }
