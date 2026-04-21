@@ -32,8 +32,19 @@ require("lazy").setup({
     {
         "nvim-telescope/telescope.nvim",
         tag = "0.1.3",
-        dependencies = { "nvim-lua/plenary.nvim", "nvim-lua/popup.nvim" },
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-lua/popup.nvim",
+            {
+                "nvim-telescope/telescope-fzf-native.nvim",
+                build = "make",
+            },
+        },
         opts = telescope,
+        config = function(_, opts)
+            require("telescope").setup(opts)
+            require("telescope").load_extension("fzf")
+        end,
         keys = {
             { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
             { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
