@@ -19,7 +19,15 @@ return {
       vim.lsp.protocol.make_client_capabilities()
     )
 
+    vim.diagnostic.config({
+      underline = false,
+    })
+
     require("mason").setup()
+
+    vim.diagnostic.config({
+      underline = false,
+    })
 
     require("mason-lspconfig").setup({
       ensure_installed = servers,
