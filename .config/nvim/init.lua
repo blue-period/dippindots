@@ -157,39 +157,52 @@ require("lazy").setup({
     end,
 },
 {
-    'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim', 'echasnovski/mini.icons', 'nvim-tree/nvim-web-devicons'},
-    opts = {},
-    config = function()
-        require('render-markdown').setup({
-            render_modes = { 'n', 'c', 't' },
-            heading = { position = 'inline'},
-        })
-    end,
+  'MeanderingProgrammer/render-markdown.nvim',
+  dependencies = {
+    'nvim-treesitter/nvim-treesitter',
+    'echasnovski/mini.nvim',
+    'echasnovski/mini.icons',
+    'nvim-tree/nvim-web-devicons',
+  },
+  opts = {
+    render_modes = { 'n', 'c', 't' },
+    heading = { position = 'inline' },
+    code = {
+      left_margin = 0,
+      left_pad = 0,
+      right_pad = 0,
+      min_width = 0,
+    },
+  },
 },
 {
     "pmizio/typescript-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = {},
     config = function()
+        local mason_tsserver = vim.fn.stdpath("data")
+            .. "/mason/packages/typescript-language-server/node_modules/typescript/lib/tsserver.js"
+
         require("typescript-tools").setup({
-            separate_diagnostic_server = true,
-            publish_diagnostic_on = "insert_leave",
-            expose_as_code_action = {},
-            tsserver_path = nil,
-            tsserver_plugins = {},
-            tsserver_max_memory = "auto",
-            tsserver_format_options = {},
-            tsserver_file_preferences = {},
-            tsserver_locale = "en",
-            complete_function_calls = false,
-            include_completions_with_insert_text = true,
-            code_lens = "off",
-            disable_member_code_lens = true,
-            jsx_close_tag = {
-                enable = false,
-                filetypes = { "javascriptreact", "typescriptreact" },
-            }
+            settings = {
+                separate_diagnostic_server = true,
+                publish_diagnostic_on = "insert_leave",
+                expose_as_code_action = {},
+                tsserver_path = vim.uv.fs_stat(mason_tsserver) and mason_tsserver or nil,
+                tsserver_plugins = {},
+                tsserver_max_memory = "auto",
+                tsserver_format_options = {},
+                tsserver_file_preferences = {},
+                tsserver_locale = "en",
+                complete_function_calls = false,
+                include_completions_with_insert_text = true,
+                code_lens = "off",
+                disable_member_code_lens = true,
+                jsx_close_tag = {
+                    enable = false,
+                    filetypes = { "javascriptreact", "typescriptreact" },
+                },
+            },
         })
     end
 },

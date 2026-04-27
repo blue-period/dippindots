@@ -4,6 +4,7 @@ return {
         ensure_installed = {
             "stylua",
             "shfmt",
+            "typescript-language-server",
             -- "flake8",
         },
         ui = {
