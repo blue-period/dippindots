@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+FZF_DIR="$HOME/dippindots/.fzf"
+
+if [[ ! -d "$FZF_DIR/.git" ]]; then
+  echo "fzf not found. Installing..."
+  git clone --depth 1 https://github.com/junegunn/fzf.git "$FZF_DIR"
+else
+  echo "fzf already installed. Updating..."
+  git -C "$FZF_DIR" pull --ff-only --quiet
+fi
+
+echo "Running fzf install script..."
+"$FZF_DIR/install" --bin
+
+echo "Done."
+echo "Make sure your ~/.zshrc has:"
+echo 'source <(fzf --zsh)'

@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Installing bat..."
+
+# macOS (Homebrew)
+if [[ "$OSTYPE" == "darwin"* ]] && command -v brew >/dev/null 2>&1; then
+  echo "Using Homebrew..."
+  brew install bat
+  exit 0
+fi
+
+# Linux package managers
+if command -v apt >/dev/null 2>&1; then
+  echo "Using apt..."
+  sudo apt update
+  sudo apt install -y bat
+
+  # fix Ubuntu/Debian batcat naming
+  if command -v batcat >/dev/null 2>&1 && ! command -v bat >/dev/null 2>&1; then
+    mkdir -p ~/.local/bin
+    ln -sf /usr/bin/batcat ~/.local/bin/bat
+  fi
+
+elif command -v dnf >/dev/null 2>&1; then
+  echo "Using dnf..."
+  sudo dnf install -y bat
+
+elif command -v pacman >/dev/null 2>&1; then
+  echo "Using pacman..."
+  sudo pacman -S --noconfirm bat
+
+elif command -v zypper >/dev/null 2>&1; then
+  echo "Using zypper..."
+  sudo zypper install -y bat
+
+# fallback: install from GitHub release
+else
+  echo "No package manager found. Installing from binary..."
+
+  TMP_DIR=$(mktemp -d)
+  cd "$TMP_DIR"
+
+  ARCH=$(uname -m)
+  if [[ "$ARCH" == "x86_64" ]]; then
+    FILE="bat-v0.26.0-x86_64-unknown-linux-gnu.tar.gz"
+  else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+  fi
+
+  curl -LO "https://github.com/sharkdp/bat/releases/latest/download/$FILE"
+  tar -xzf "$FILE"
+
+  cp bat-*/bat ~/.local/bin/
+
+  echo "Installed to ~/.local/bin/bat"
+fi
+
+echo "Done."
+echo "Verify with: bat --version"
