@@ -4,6 +4,6 @@ one note is that YOU NEED TO MAKE SURE YOU USE ABSOLUTE PATHS WHEN MAKING THE SY
 
 if not, your configs wont work properly
 
-i.e: ln -nfs /Users/user/dotfiles/.config /Users/user/.config
+i.e: ln -nfs /Users/user/dippindots/.config /Users/user/.config
 
 
