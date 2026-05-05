@@ -11,8 +11,8 @@ autoload -Uz compinit
 compinit
 
 source <(fzf --zsh)
-# restore normal tab behavior
-bindkey '^I' expand-or-complete
+
+
 # bind fzf-tab to Esc-T
 bindkey '^[t' fzf-tab-complete
 # bind fzf file picker to Esc-G
@@ -22,6 +22,9 @@ bindkey -r '^T'
 
 # load fzf-tab last among completion-related plugins
 source "$FZF_TAB_DIR/fzf-tab.plugin.zsh"
+
+# restore normal tab behavior
+bindkey '^I' expand-or-complete
 
 # What you get now:
 # <Tab> → fzf-tab
