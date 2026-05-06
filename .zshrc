@@ -1,8 +1,8 @@
 alias v="nvim"
 alias cat='bat --style=plain'
-export VISUAL="nvim"
-export GIT_EDITOR="nvim"
-export EDITOR="nvim"
+export EDITOR="nvim -u $HOME/.config/nvim/minimal.lua"
+export VISUAL="$EDITOR"
+export GIT_EDITOR="$EDITOR"
 export KEYTIMEOUT=20
 
 # -------------------------------------------
