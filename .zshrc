@@ -1,5 +1,5 @@
 alias v="nvim"
-alias cat="bat --style=plain"
+alias cat='bat --style=plain'
 export VISUAL="nvim"
 export GIT_EDITOR="nvim"
 export EDITOR="nvim"
