@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Installing zsh-vi-mode on Ubuntu..."
+
+if ! command -v apt >/dev/null 2>&1; then
+  echo "This installer expects Ubuntu with apt available."
+  exit 1
+fi
+
+sudo apt update
+sudo apt install -y git
+
+ZSH_VI_MODE_DIR="$HOME/dippindots/.zsh-vi-mode"
+
+if [[ ! -d "$ZSH_VI_MODE_DIR/.git" ]]; then
+  git clone https://github.com/jeffreytse/zsh-vi-mode "$ZSH_VI_MODE_DIR"
+else
+  git -C "$ZSH_VI_MODE_DIR" pull --ff-only --quiet
+fi
+
+echo "Done."
+echo "Make sure your ~/.zshrc has:"
+echo "source $ZSH_VI_MODE_DIR/zsh-vi-mode.plugin.zsh"

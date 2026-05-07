@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Installing zoxide on macOS..."
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Homebrew is required. Install it from https://brew.sh/"
+  exit 1
+fi
+
+brew install zoxide
+
+echo "Done."
+echo "Make sure your ~/.zshrc has this after compinit:"
+echo 'eval "$(zoxide init zsh)"'

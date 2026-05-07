@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Installing fzf-tab on Ubuntu..."
+
+if ! command -v apt >/dev/null 2>&1; then
+  echo "This installer expects Ubuntu with apt available."
+  exit 1
+fi
+
+sudo apt update
+sudo apt install -y git
+
+FZF_TAB_DIR="$HOME/dippindots/.fzf-tab"
+
+if [[ ! -d "$FZF_TAB_DIR/.git" ]]; then
+  git clone https://github.com/Aloxaf/fzf-tab "$FZF_TAB_DIR"
+else
+  git -C "$FZF_TAB_DIR" pull --ff-only --quiet
+fi
+
+echo "Done."

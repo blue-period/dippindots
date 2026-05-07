@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Installing zoxide on Ubuntu..."
+
+if ! command -v apt >/dev/null 2>&1; then
+  echo "This installer expects Ubuntu with apt available."
+  exit 1
+fi
+
+sudo apt update
+sudo apt install -y zoxide
+
+echo "Done."
+echo "Make sure your ~/.zshrc has this after compinit:"
+echo 'eval "$(zoxide init zsh)"'

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Installing bat on macOS..."
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Homebrew is required. Install it from https://brew.sh/"
+  exit 1
+fi
+
+brew install bat
+
+echo "Done."
+echo "Verify with: bat --version"
