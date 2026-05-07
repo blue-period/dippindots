@@ -1,5 +1,6 @@
 alias v="nvim"
 alias cat='bat --style=plain'
+#Also infers vi keybindings from setting the EDITOR to nvim
 export EDITOR="nvim -u $HOME/.config/nvim/minimal.lua"
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
