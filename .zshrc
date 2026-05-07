@@ -4,7 +4,7 @@ alias cat='bat --style=plain'
 export EDITOR="nvim -u $HOME/.config/nvim/minimal.lua"
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
-export KEYTIMEOUT=20
+export KEYTIMEOUT=10
 
 # -------------------------------------------
 # 1. Edit Command Buffer
