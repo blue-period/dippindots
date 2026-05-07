@@ -23,6 +23,7 @@ bindkey '^[e' edit-command-line
 #bindkey '^Y' redo  # Example binding if you want it
 
 source $HOME/dippindots/tools/fzftab
+source $HOME/dippindots/tools/zsh-vi-mode
 
 # zoxide
 eval "$(zoxide init zsh)"
