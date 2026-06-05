@@ -1,0 +1,15 @@
+ga() {
+    git status --short \
+        | fzf -m \
+        | awk '{print $2}' \
+        | tr '\n' '\0' \
+        | xargs -0 git add
+}
+
+gr() {
+    git status --short \
+        | fzf -m \
+        | awk '{print $2}' \
+        | tr '\n' '\0' \
+        | xargs -0 git restore
+}
