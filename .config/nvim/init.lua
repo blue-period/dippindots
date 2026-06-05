@@ -31,10 +31,9 @@ local mason = require("lsp.mason")
 require("lazy").setup({
     {
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.3",
+        version = "*",
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "nvim-lua/popup.nvim",
             {
                 "nvim-telescope/telescope-fzf-native.nvim",
                 build = "make",
@@ -157,23 +156,23 @@ require("lazy").setup({
     end,
 },
 {
-  'MeanderingProgrammer/render-markdown.nvim',
-  dependencies = {
-    'nvim-treesitter/nvim-treesitter',
-    'echasnovski/mini.nvim',
-    'echasnovski/mini.icons',
-    'nvim-tree/nvim-web-devicons',
-  },
-  opts = {
-    render_modes = { 'n', 'c', 't' },
-    heading = { position = 'inline' },
-    code = {
-      left_margin = 0,
-      left_pad = 0,
-      right_pad = 0,
-      min_width = 0,
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = {
+        'nvim-treesitter/nvim-treesitter',
+        'echasnovski/mini.nvim',
+        'echasnovski/mini.icons',
+        'nvim-tree/nvim-web-devicons',
     },
-  },
+    opts = {
+        render_modes = { 'n', 'c', 't' },
+        heading = { position = 'inline' },
+        code = {
+            left_margin = 0,
+            left_pad = 0,
+            right_pad = 0,
+            min_width = 0,
+        },
+    },
 },
 {
     "pmizio/typescript-tools.nvim",
@@ -181,7 +180,7 @@ require("lazy").setup({
     opts = {},
     config = function()
         local mason_tsserver = vim.fn.stdpath("data")
-            .. "/mason/packages/typescript-language-server/node_modules/typescript/lib/tsserver.js"
+        .. "/mason/packages/typescript-language-server/node_modules/typescript/lib/tsserver.js"
 
         require("typescript-tools").setup({
             settings = {
