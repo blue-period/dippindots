@@ -12,22 +12,17 @@ compinit
 
 source <(fzf --zsh)
 
-
-# bind fzf-tab to Esc-T
-bindkey '^[t' fzf-tab-complete
-# bind fzf file picker to Esc-G
-bindkey '^[g' fzf-file-widget
-#remove ctr-t
-bindkey -r '^T'
-
 # load fzf-tab last among completion-related plugins
 source "$FZF_TAB_DIR/fzf-tab.plugin.zsh"
 
-# restore normal tab behavior
+# bind fzf-tab to Ctrl-T
+bindkey '^T' fzf-tab-complete
+
+# bind fzf file picker to Ctrl-G
+bindkey '^F' fzf-file-widget
+
+# restore normal tab behavior if needed
 bindkey '^I' expand-or-complete
 
-# What you get now:
-# <Tab> → fzf-tab
-# Esc-T → recursive fuzzy file search
-# Alt-C or Esc-C → fuzzy cd into directories
-# Ctrl-R → fuzzy history search
+
+
