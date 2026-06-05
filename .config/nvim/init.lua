@@ -156,25 +156,6 @@ require("lazy").setup({
     end,
 },
 {
-    'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = {
-        'nvim-treesitter/nvim-treesitter',
-        'echasnovski/mini.nvim',
-        'echasnovski/mini.icons',
-        'nvim-tree/nvim-web-devicons',
-    },
-    opts = {
-        render_modes = { 'n', 'c', 't' },
-        heading = { position = 'inline' },
-        code = {
-            left_margin = 0,
-            left_pad = 0,
-            right_pad = 0,
-            min_width = 0,
-        },
-    },
-},
-{
     "pmizio/typescript-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = {},
@@ -214,5 +195,31 @@ require("lazy").setup({
             {"nvim-dap-ui"}
         },
     }
+},
+{
+    "OXY2DEV/markview.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+        require("markview").setup({})
+    end,
+},
+{
+    'nvim-treesitter/nvim-treesitter',
+    lazy = false,
+    build = ':TSUpdate',
+    config = function()
+        require("nvim-treesitter").install({
+            "markdown",
+            "markdown_inline",
+            "python",
+            "javascript",
+            "tsx",
+            "html",
+            "css",
+            "json"
+
+        })
+    end,
 }
 })
