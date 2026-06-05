@@ -13,3 +13,7 @@ gr() {
         | tr '\n' '\0' \
         | xargs -0 git restore
 }
+
+gs() {
+    git status -sb
+}
