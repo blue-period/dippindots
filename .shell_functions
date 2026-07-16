@@ -1,6 +1,6 @@
 ga() {
     git status --short \
-        | fzf -m --bind 'tab:toggle+clear-query' \
+        | fzf --height 50% -m --bind 'tab:toggle+clear-query' \
         | awk '{print $2}' \
         | tr '\n' '\0' \
         | xargs -0 git add
@@ -8,7 +8,7 @@ ga() {
 
 gr() {
     git status --short \
-        | fzf -m --bind 'tab:toggle+clear-query' \
+        | fzf --height 50% -m --bind 'tab:toggle+clear-query' \
         | awk '{print $2}' \
         | tr '\n' '\0' \
         | xargs -0 git restore
@@ -17,3 +17,4 @@ gr() {
 gs() {
     git status -sb
 }
+
