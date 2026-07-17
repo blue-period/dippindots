@@ -8,6 +8,11 @@ export KEYTIMEOUT=10
 
 source ~/.shell_functions
 
+
+#Install fzf
+#git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+#~/.fzf/install
+
 # FZF open with ctr f
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 eval "$(fzf --bash)"
