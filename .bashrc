@@ -5,6 +5,7 @@ export EDITOR="nvim -u $HOME/.config/nvim/minimal.lua"
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
 export KEYTIMEOUT=10
+export PATH=$PATH:$HOME/.local/bin
 
 source ~/.shell_functions
 
