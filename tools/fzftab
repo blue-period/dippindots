@@ -18,7 +18,42 @@ source "$FZF_TAB_DIR/fzf-tab.plugin.zsh"
 # bind fzf-tab to Ctrl-T
 bindkey '^T' fzf-tab-complete
 
-# bind fzf file picker to Ctrl-G
+# -------------------------------------------
+# 1. Edit Command Buffer
+# -------------------------------------------
+# Open the current command in your $EDITOR (e.g., neovim)
+# Press Esc followed by e (or Alt+e) to trigger
+edit_command_line() {
+  local tmp pos
+  tmp=$(mktemp) || return
+  pos=$(mktemp) || { rm -f "$tmp"; return; }
+
+  print -r -- "$BUFFER" > "$tmp"
+
+  local -x CMDLINE_POS_FILE="$pos"
+  local -a editor_cmd
+  editor_cmd=(${(z)EDITOR:-nvim})
+  command "$editor_cmd[@]" "$tmp"
+
+  BUFFER=$(<"$tmp")
+  if [[ -r "$pos" ]]; then
+    CURSOR=$(<"$pos")
+  else
+    CURSOR=${#BUFFER}
+  fi
+
+  rm -f "$tmp" "$pos"
+  zle redisplay
+}
+
+zle -N edit_command_line
+
+# Turn off vi mode and use emacs-style keybindings
+bindkey -e
+
+# Bind Ctrl-E to edit the current command line
+bindkey '^E' edit_command_line
+
 bindkey '^F' fzf-file-widget
 
 # restore normal tab behavior if needed
