@@ -1,46 +1,44 @@
-# ~/.bashrc: bash equivalent of this repo's .zshrc
-
-# If not running interactively, do not do anything.
-case $- in
-  *i*) ;;
-  *) return ;;
-esac
-
 alias v="nvim"
 alias cat='bat --style=plain'
-
-# Also sets the editor used by Readline's edit-and-execute-command.
+#Also infers vi keybindings from setting the EDITOR to nvim
 export EDITOR="nvim -u $HOME/.config/nvim/minimal.lua"
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
+export KEYTIMEOUT=10
 
-# Zsh's KEYTIMEOUT is roughly analogous to Bash Readline's keyseq timeout.
-bind 'set keyseq-timeout 10'
+source ~/.shell_functions
+
+# FZF open with ctr f
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+eval "$(fzf --bash)"
+bind -r '"\C-t"'
+bind -x '"\C-f": fzf-file-widget'
 
 # -------------------------------------------
 # 1. Edit Command Buffer
 # -------------------------------------------
-# Open the current command in your $EDITOR.
-# Press Esc followed by e (or Alt+e) to trigger.
-bind '"\ee": edit-and-execute-command'
+# Open the current command in your $EDITOR (e.g., neovim)
+# Press Esc followed by e (or Alt+e) to trigger
+# Edit the current command line in your editor, then return to the prompt
+edit_command_line() {
+    local tmp
+    tmp=$(mktemp) || return
 
-# -------------------------------------------
-# 2. Undo in Bash
-# -------------------------------------------
-# Press Ctrl+_ (Ctrl+Underscore) to undo.
-# This is built into Readline, no configuration needed.
+    printf '%s' "$READLINE_LINE" > "$tmp"
 
-# fzf
-# The repo's tools/fzftab file is zsh-only, so use fzf's bash integration here.
-if command -v fzf >/dev/null 2>&1; then
-  source <(fzf --bash)
+    # If EDITOR contains arguments, this handles them correctly.
+    eval "${EDITOR:-nvim}" "\"$tmp\""
 
-  # Match the zsh config's custom fuzzy file picker binding.
-  bind -x '"\eg": fzf-file-widget'
+    READLINE_LINE=$(<"$tmp")
+    READLINE_POINT=${#READLINE_LINE}
 
-  # Remove the default Ctrl-T fzf binding, matching the zsh config.
-  bind -r '"\C-t"' 2>/dev/null || true
-fi
+    rm -f "$tmp"
+}
+
+# Bind Ctrl-E to edit the current command line
+bind -x '"\C-e": edit_command_line'
+
+
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
