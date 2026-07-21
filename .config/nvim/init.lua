@@ -204,22 +204,4 @@ require("lazy").setup({
         require("markview").setup({})
     end,
 },
-{
-    'nvim-treesitter/nvim-treesitter',
-    lazy = false,
-    build = ':TSUpdate',
-    config = function()
-        require("nvim-treesitter").install({
-            "markdown",
-            "markdown_inline",
-            "python",
-            "javascript",
-            "tsx",
-            "html",
-            "css",
-            "json"
-
-        })
-    end,
-}
 })
